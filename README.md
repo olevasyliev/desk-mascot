@@ -1,5 +1,7 @@
 # Desk Mascot
 
+![Desk Mascot](docs/art/social-preview.png)
+
 A small robot that sits on your Mac screen and keeps you company while [Claude Code](https://claude.com/claude-code)
 works. Hold a key and talk to your session, watch the robot think, work and wave when Claude needs you, and hear a
 short spoken answer when it's done.
