@@ -258,7 +258,8 @@ def installed_voices():
 
 
 def get_settings():
-    return {"values": {f"{sec}.{key}": CFG[sec][key] for sec, key in SETTINGS}, "voices": installed_voices()}
+    return {"values": {f"{sec}.{key}": CFG[sec][key] for sec, key in SETTINGS}, "voices": installed_voices(),
+            "languages": CFG["stt"]["languages"]}
 
 
 def set_setting(path, value):

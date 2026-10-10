@@ -128,7 +128,7 @@
   <div class="row"><label>Dictation key</label>
     <select data-path="hotkeys.push_to_talk"><option value="left_option">hold left ⌥</option><option value="right_option">hold right ⌥</option></select></div>
   <div class="row"><label>Language</label>
-    <select data-path="stt.language"><option value="ru">Russian (fast)</option><option value="auto">auto-detect</option><option value="en">English</option></select></div>
+    <select data-path="stt.language"></select></div>
   <div class="row"><label>Press Enter after</label><label class="switch"><input type="checkbox" data-path="stt.auto_enter"><span></span></label></div>
   <div class="sep"></div>
   <div class="row"><label>New session in</label></div>
@@ -195,7 +195,9 @@
   const SAVE_AS = { "hotkeys.push_to_talk": v => [v, "f19"] };
 
   async function loadSettings() {
-    const { values, voices } = await (await fetch("/settings")).json();
+    const { values, voices, languages } = await (await fetch("/settings")).json();
+    panel.querySelector('[data-path="stt.language"]').innerHTML =
+      Object.entries(languages).map(([code, name]) => `<option value="${code}">${name}</option>`).join("");
     for (const sel of panel.querySelectorAll("select[data-voices]")) {
       const list = [...(voices[sel.dataset.voices] || [])];
       const current = values[sel.dataset.path];

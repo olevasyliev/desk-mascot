@@ -15,7 +15,9 @@ push_to_talk = ["left_option", "f19"]   # left_option | right_option | any pynpu
 
 [stt]
 model = "models/ggml-large-v3-turbo-q5_0.bin"
-language = "ru"            # "ru" is ~2x faster than "auto" and keeps English terms inside Russian speech; pure English needs "auto" or "en"
+language = "auto"          # a fixed language is ~2x faster than "auto" and keeps English terms inside other speech
+# Dictation languages in the settings panel: whisper code = label. Add any of whisper's ~100 codes, e.g. uk = "Ukrainian".
+languages = { auto = "auto-detect", en = "English", es = "Spanish", fr = "French", de = "German", pt = "Portuguese", it = "Italian", zh = "Chinese", ja = "Japanese", hi = "Hindi", ar = "Arabic" }
 server_port = 7789
 min_seconds = 0.4
 auto_enter = false         # press Return after pasting

@@ -63,7 +63,7 @@ Click the robot to open settings. Changes apply right away and are saved to `set
 | Speak for | all sessions, or only the session you prompted last |
 | Russian / English voice | any installed macOS voice, or **System**: the voice chosen in *Accessibility → Spoken Content*. That's the only way to use Siri voices. |
 | Dictation key | hold left or right ⌥ |
-| Language | Russian (fastest for Russian, keeps English terms), auto-detect, English |
+| Language | auto-detect or one of 10 languages (a fixed one is ~2x faster). Add more in `config.toml` → `stt.languages` |
 | Press Enter after | send the prompt right after pasting |
 | New session in | folder for new sessions |
 | Show in Dock | robot icon in the Dock, or no Dock icon at all (the robot stays on screen) |
