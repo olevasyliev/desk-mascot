@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Desk Mascot icon</title>
+<style>
+  html, body { margin: 0; background: transparent; }
+  svg { display: block; width: 1024px; height: 1024px; }
+</style>
+</head>
+<body>
+<!-- App icon: the post's robot on the macOS icon grid (824px squircle inside 1024). Rendered to face/icon.png. -->
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="room" cx="62%" cy="52%" r="75%">
+      <stop offset="0" stop-color="#3a2547"/>
+      <stop offset=".55" stop-color="#21172f"/>
+      <stop offset="1" stop-color="#110c1a"/>
+    </radialGradient>
+    <radialGradient id="lamp" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffb46b" stop-opacity=".55"/>
+      <stop offset=".5" stop-color="#ff8a3d" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="screenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#7fb4ff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#7fb4ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6b3f2a"/>
+      <stop offset="1" stop-color="#3b2117"/>
+    </linearGradient>
+    <linearGradient id="deskEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a5538"/>
+      <stop offset="1" stop-color="#5a3322"/>
+    </linearGradient>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a5c"/>
+      <stop offset=".45" stop-color="#ee7a3d"/>
+      <stop offset="1" stop-color="#c2561f"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#241b16"/>
+      <stop offset="1" stop-color="#120d0a"/>
+    </linearGradient>
+    <linearGradient id="laptopLid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a3d46"/>
+      <stop offset="1" stop-color="#22242b"/>
+    </linearGradient>
+    <linearGradient id="laptopBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9ccd3"/>
+      <stop offset="1" stop-color="#8d9099"/>
+    </linearGradient>
+    <linearGradient id="mug" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9e4dc"/>
+      <stop offset=".6" stop-color="#f7f3ec"/>
+      <stop offset="1" stop-color="#cfc8bd"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowR" filterUnits="userSpaceOnUse" x="-320" y="-320" width="640" height="640">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo" filterUnits="userSpaceOnUse" x="0" y="0" width="1080" height="300">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="blur4"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <defs>
+    <radialGradient id="tile" cx="50%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#4a2e5a"/>
+      <stop offset=".6" stop-color="#26193a"/>
+      <stop offset="1" stop-color="#140e20"/>
+    </radialGradient>
+    <clipPath id="squircle"><rect x="100" y="100" width="824" height="824" rx="186"/></clipPath>
+    <filter id="tileShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#tile)" filter="url(#tileShadow)"/>
+  <g clip-path="url(#squircle)">
+    <circle cx="512" cy="560" r="400" fill="url(#lamp)"/>
+    <ellipse cx="512" cy="826" rx="200" ry="24" fill="#000" opacity=".4" filter="url(#blur4)"/>
+    <!-- ===== the robot ===== -->
+  <g transform="translate(512 548) scale(1.12)">
+    <!-- feet -->
+    <rect x="-92" y="196" width="68" height="40" rx="12" fill="#b04d1c"/>
+    <rect x="24" y="196" width="68" height="40" rx="12" fill="#b04d1c"/>
+    <rect x="-92" y="196" width="68" height="14" rx="7" fill="#c95b26"/>
+    <rect x="24" y="196" width="68" height="14" rx="7" fill="#c95b26"/>
+    <!-- antenna -->
+    <rect x="-6" y="-236" width="12" height="80" rx="6" fill="#b04d1c"/>
+    <circle cx="0" cy="-252" r="40" fill="#ffe9b8" opacity=".35" filter="url(#soft)"/>
+    <circle cx="0" cy="-252" r="22" fill="#fff1cf" filter="url(#glowR)"/>
+    <circle cx="-7" cy="-259" r="7" fill="#fff"/>
+    <!-- ears -->
+    <rect x="-212" y="-44" width="36" height="112" rx="16" fill="#b04d1c"/>
+    <rect x="176" y="-44" width="36" height="112" rx="16" fill="#b04d1c"/>
+    <!-- head -->
+    <rect x="-190" y="-170" width="380" height="356" rx="78" fill="url(#head)"/>
+    <rect x="-190" y="-170" width="380" height="356" rx="78" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="3"/>
+    <path d="M-150 -146 Q-60 -164 60 -158" stroke="#ffc39b" stroke-opacity=".55" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M-190 120 Q0 200 190 120 L190 108 Q190 186 112 186 L-112 186 Q-190 186 -190 108 Z" fill="#000" opacity=".12"/>
+    <!-- screen -->
+    <rect x="-146" y="-124" width="292" height="232" rx="44" fill="url(#screen)"/>
+    <rect x="-146" y="-124" width="292" height="232" rx="44" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="4"/>
+    <path d="M-120 -104 Q-40 -116 40 -110" stroke="#fff" stroke-opacity=".07" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <!-- happy eyes (^ ^) -->
+    <g filter="url(#glowR)" fill="none" stroke="#ffe9b8" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-92 -6 Q-62 -50 -32 -6"/>
+      <path d="M32 -6 Q62 -50 92 -6"/>
+    </g>
+    <!-- smile -->
+    <path d="M-30 46 Q0 72 30 46" fill="none" stroke="#ffe9b8" stroke-width="12" stroke-linecap="round" filter="url(#glowR)"/>
+    <!-- cheeks -->
+    <ellipse cx="-104" cy="40" rx="22" ry="12" fill="#ff8f86" opacity=".55" filter="url(#blur4)"/>
+    <ellipse cx="104" cy="40" rx="22" ry="12" fill="#ff8f86" opacity=".55" filter="url(#blur4)"/>
+  </g>
+
+  
+  </g>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+</svg>
+</body>
+</html>

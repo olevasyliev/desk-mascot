@@ -1,4 +1,4 @@
-# Desk Mascot
+# <img src="face/icon.png" width="40" align="top" alt=""> Desk Mascot
 
 ![Desk Mascot](docs/art/social-preview.png)
 
@@ -66,6 +66,7 @@ Click the robot to open settings. Changes apply right away and are saved to `set
 | Language | Russian (fastest for Russian, keeps English terms), auto-detect, English |
 | Press Enter after | send the prompt right after pasting |
 | New session in | folder for new sessions |
+| Show in Dock | robot icon in the Dock, or no Dock icon at all (the robot stays on screen) |
 
 Everything else (shortcuts, model, port) is in `config.toml`. Values in `settings.json` override it.
 

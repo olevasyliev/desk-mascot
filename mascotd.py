@@ -236,6 +236,7 @@ def write_tab_config():
 SETTINGS = [  # (section, key) the panel may change
     ("voice", "enabled"), ("voice", "scope"), ("voice", "voice_ru"), ("voice", "voice_en"),
     ("stt", "language"), ("stt", "auto_enter"), ("hotkeys", "push_to_talk"), ("general", "default_dir"),
+    ("general", "show_in_dock"),
 ]
 
 
@@ -278,6 +279,8 @@ def set_setting(path, value):
             stop_speaking()
     if path == "general.default_dir" and terminal() == "warp":
         write_tab_config()
+    if path == "general.show_in_dock" and WindowApi.window:
+        apply_dock()
     log("setting", path, "=", value)
     M.push(force=True)
 
@@ -572,6 +575,21 @@ class WindowApi:
             w.move(w.x + int(dx), w.y)
 
 
+def apply_dock():
+    """Dock icon on (robot icon instead of Python's rocket) or off (accessory app, window only). Any thread."""
+    from AppKit import NSApplication, NSImage
+    from PyObjCTools import AppHelper
+
+    def run():
+        app = NSApplication.sharedApplication()
+        if CFG["general"].get("show_in_dock", True):
+            app.setActivationPolicy_(0)  # NSApplicationActivationPolicyRegular
+            app.setApplicationIconImage_(NSImage.alloc().initWithContentsOfFile_(str(ROOT / "face" / "icon.png")))
+        else:
+            app.setActivationPolicy_(1)  # NSApplicationActivationPolicyAccessory
+    AppHelper.callAfter(run)
+
+
 def main():
     headless = "--headless" in sys.argv
     stt = start_stt()
@@ -589,7 +607,7 @@ def main():
                                         frameless=True, on_top=True, transparent=True, easy_drag=False,
                                         x=40, y=40, js_api=WindowApi())
             WindowApi.window = win
-            webview.start()
+            webview.start(apply_dock)
     except KeyboardInterrupt:
         pass
     finally:

@@ -4,6 +4,7 @@
 port = 7788
 default_dir = "~"                       # where a new Claude session starts
 terminal = "auto"                        # "auto" (Warp if installed), "warp" or "terminal" (Terminal.app)
+show_in_dock = true                      # robot icon in the Dock; false = only the window on screen
 
 [hotkeys]
 # Combos use pynput names: <ctrl>, <alt>, <cmd>, <shift>, letters, <f17>...
