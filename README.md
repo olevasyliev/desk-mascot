@@ -31,7 +31,7 @@ you already use.
 ## Install
 
 ```bash
-git clone https://github.com/<you>/desk-mascot ~/desk-mascot
+git clone https://github.com/olevasyliev/desk-mascot ~/desk-mascot
 cd ~/desk-mascot
 ./install.sh
 ```
