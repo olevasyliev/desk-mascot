@@ -2,6 +2,8 @@
 # Start the mascot (face window + hotkeys + local STT). Restarts it after a crash;
 # a normal stop (Ctrl+C, pkill/SIGTERM) ends the loop.
 cd "$(dirname "$0")" || exit 1
+# The login app starts us with the bare system PATH; whisper-server lives in Homebrew.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 crashes=0
 while true; do
   .venv/bin/python "$PWD/mascotd.py" "$@"
