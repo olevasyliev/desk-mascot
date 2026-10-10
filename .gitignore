@@ -3,3 +3,4 @@ models/
 __pycache__/
 Desk Mascot.app/
 settings.json
+.DS_Store
