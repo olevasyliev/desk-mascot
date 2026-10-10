@@ -61,7 +61,7 @@ Click the robot to open settings. Changes apply right away and are saved to `set
 |---|---|
 | Spoken replies | on / off |
 | Speak for | all sessions, or only the session you prompted last |
-| Russian / English voice | any installed macOS voice, or **System**: the voice chosen in *Accessibility → Spoken Content*. That's the only way to use Siri voices. |
+| Voice | any installed macOS voice, or **System**: the voice chosen in *Accessibility → Spoken Content*. That's the only way to use Siri voices. Set `voice_ru` in `config.toml` to get a second voice for replies in Cyrillic. |
 | Dictation key | hold left or right ⌥ |
 | Language | auto-detect or one of 10 languages (a fixed one is ~2x faster). Add more in `config.toml` → `stt.languages` |
 | Press Enter after | send the prompt right after pasting |

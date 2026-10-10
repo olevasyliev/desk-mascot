@@ -187,7 +187,7 @@ def spoken_summary(text):
 def speak(text):
     stop_speaking()
     cyr = bool(re.search(r"[а-яА-ЯёЁ]", text))
-    voice = CFG["voice"]["voice_ru" if cyr else "voice_en"]
+    voice = CFG["voice"]["voice_ru" if cyr and "voice_ru" in CFG["voice"] else "voice"]
     log("say", voice or "(system voice)", repr(text))
     # Empty voice = the system Spoken Content voice; that's the only way to reach Siri/neural voices from `say`.
     M.say_proc = subprocess.Popen(["say", *(["-v", voice] if voice else []), text], stderr=subprocess.PIPE)
@@ -234,10 +234,10 @@ def write_tab_config():
 
 # ---- settings panel ----
 SETTINGS = [  # (section, key) the panel may change
-    ("voice", "enabled"), ("voice", "scope"), ("voice", "voice_ru"), ("voice", "voice_en"),
+    ("voice", "enabled"), ("voice", "scope"), ("voice", "voice"),
     ("stt", "language"), ("stt", "auto_enter"), ("hotkeys", "push_to_talk"), ("general", "default_dir"),
     ("general", "show_in_dock"),
-]
+] + ([("voice", "voice_ru")] if "voice_ru" in CFG["voice"] else [])
 
 
 def terminal():
@@ -249,11 +249,13 @@ def terminal():
 
 def installed_voices():
     out = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
-    voices = {"ru": [], "en": []}
+    voices = {"all": [], "ru": []}
     for line in out.splitlines():
         m = re.match(r"^(.+?)\s+(\w\w)_\w\w\s+#", line)
-        if m and m.group(2) in voices:
-            voices[m.group(2)].append(m.group(1).strip())
+        if m:
+            voices["all"].append(m.group(1).strip())
+            if m.group(2) == "ru":
+                voices["ru"].append(m.group(1).strip())
     return voices
 
 
@@ -506,7 +508,7 @@ async def h_settings(req):
 
 
 async def h_test_voice(req):
-    lang = (await req.json()).get("lang", "ru")
+    lang = (await req.json()).get("lang", "en")
     text = "Привет! Так я звучу." if lang == "ru" else "Hi! This is how I sound."
     threading.Thread(target=speak, args=(text,), daemon=True).start()
     return web.Response(text="ok")

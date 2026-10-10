@@ -16,6 +16,7 @@
            font: 12px/1.3 -apple-system, sans-serif; color: #f3e9dc; }
   .open .panel { display: block; }
   .panel h1 { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--body); }
+  .row[hidden] { display: none; }
   .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 9px; }
   .row > label:not(.switch) { flex: 0 0 auto; color: #cbbfb2; }
   .row select, .row input[type=text] { flex: 1 1 auto; min-width: 0; max-width: 150px; background: #2a2420; color: #f3e9dc;
@@ -121,8 +122,8 @@
   <div class="row"><label>Spoken replies</label><label class="switch"><input type="checkbox" data-path="voice.enabled"><span></span></label></div>
   <div class="row"><label>Speak for</label>
     <select data-path="voice.scope"><option value="all">all sessions</option><option value="last">last prompted only</option></select></div>
-  <div class="row"><label>Russian voice</label><select data-path="voice.voice_ru" data-voices="ru"></select><button class="play" data-lang="ru">▶</button></div>
-  <div class="row"><label>English voice</label><select data-path="voice.voice_en" data-voices="en"></select><button class="play" data-lang="en">▶</button></div>
+  <div class="row"><label>Voice</label><select data-path="voice.voice" data-voices="all"></select><button class="play" data-lang="en">▶</button></div>
+  <div class="row" id="voice-ru" hidden><label>Russian voice</label><select data-path="voice.voice_ru" data-voices="ru"></select><button class="play" data-lang="ru">▶</button></div>
   <div class="hint">"System" = the voice set in Spoken Content (Siri voices live there).</div>
   <div class="sep"></div>
   <div class="row"><label>Dictation key</label>
@@ -198,6 +199,7 @@
     const { values, voices, languages } = await (await fetch("/settings")).json();
     panel.querySelector('[data-path="stt.language"]').innerHTML =
       Object.entries(languages).map(([code, name]) => `<option value="${code}">${name}</option>`).join("");
+    document.getElementById("voice-ru").hidden = !("voice.voice_ru" in values);  // only when config sets voice_ru
     for (const sel of panel.querySelectorAll("select[data-voices]")) {
       const list = [...(voices[sel.dataset.voices] || [])];
       const current = values[sel.dataset.path];

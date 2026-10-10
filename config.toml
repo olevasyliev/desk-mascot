@@ -24,7 +24,7 @@ auto_enter = false         # press Return after pasting
 
 [voice]
 enabled = true             # spoken replies on start; toggle with the voice hotkey
-voice_ru = ""              # "" = system voice from Spoken Content (Siri/neural voices live only there)
-voice_en = "Daniel"        # any name from `say -v ?`, or "" for the system voice
+voice = ""                 # any name from `say -v ?`; "" = system voice from Spoken Content (Siri voices live only there)
+# voice_ru = ""            # optional second voice for replies in Cyrillic; adds a "Russian voice" row to the panel
 max_chars = 200
 scope = "all"              # "all" sessions, or "last" = only the session you last prompted
