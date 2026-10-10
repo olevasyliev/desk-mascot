@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mascot</title>
+<style>
+  :root {
+    --body: #e8743b; --body-dark: #c45a26; --screen: #1a1512; --glow: #ffe9b8; --alert: #ffb347;
+  }
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; user-select: none; }
+  .stage { position: relative; width: 170px; height: 205px; margin: 0 auto; cursor: grab; }
+
+  /* settings panel */
+  .panel { display: none; margin: 0 10px; padding: 12px 14px 14px; background: rgba(28, 24, 21, .96); border-radius: 14px;
+           border: 1px solid rgba(232, 116, 59, .35); box-shadow: 0 8px 24px rgba(0,0,0,.45);
+           font: 12px/1.3 -apple-system, sans-serif; color: #f3e9dc; }
+  .open .panel { display: block; }
+  .panel h1 { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--body); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 9px; }
+  .row > label:not(.switch) { flex: 0 0 auto; color: #cbbfb2; }
+  .row select, .row input[type=text] { flex: 1 1 auto; min-width: 0; max-width: 150px; background: #2a2420; color: #f3e9dc;
+           border: 1px solid #4a3f37; border-radius: 6px; padding: 3px 5px; font: inherit; }
+  .row input[type=text] { max-width: 100%; }
+  .row .play { flex: 0 0 auto; background: none; border: 1px solid #4a3f37; color: var(--glow); border-radius: 6px;
+               width: 24px; height: 22px; cursor: pointer; font-size: 10px; }
+  .switch { position: relative; width: 34px; height: 20px; flex: 0 0 auto; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch span { position: absolute; inset: 0; background: #4a3f37; border-radius: 10px; transition: background .2s; cursor: pointer; }
+  .switch span::after { content: ""; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; border-radius: 50%;
+                        background: #f3e9dc; transition: transform .2s; }
+  .switch input:checked + span { background: var(--body); }
+  .switch input:checked + span::after { transform: translateX(14px); }
+  .sep { height: 1px; background: #3a322c; margin: 4px 0 10px; }
+  .hint { color: #8f8377; font-size: 10.5px; margin: -4px 0 9px; }
+  .bot { position: absolute; left: 50%; top: 46px; transform: translateX(-50%); width: 132px; height: 116px; }
+  .antenna { position: absolute; left: 50%; top: -30px; width: 4px; height: 26px; margin-left: -2px; background: var(--body-dark); border-radius: 2px; }
+  .light { position: absolute; left: 50%; top: -40px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+           background: var(--glow); box-shadow: 0 0 10px 3px rgba(255, 233, 184, .55); transition: background .3s, box-shadow .3s; }
+  .head { position: absolute; inset: 0; background: linear-gradient(160deg, #f08a4f, var(--body) 45%, var(--body-dark));
+          border-radius: 26px; box-shadow: inset 0 -6px 0 rgba(0,0,0,.12), 0 6px 14px rgba(0,0,0,.25); }
+  .ear { position: absolute; top: 40px; width: 10px; height: 34px; background: var(--body-dark); border-radius: 5px; }
+  .ear.l { left: -7px; } .ear.r { right: -7px; }
+  .screen { position: absolute; left: 14px; right: 14px; top: 16px; bottom: 18px; background: var(--screen);
+            border-radius: 14px; box-shadow: inset 0 2px 6px rgba(0,0,0,.6); overflow: hidden; }
+  .eye { position: absolute; top: 24px; width: 20px; height: 22px; background: var(--glow); border-radius: 4px;
+         box-shadow: 0 0 8px rgba(255, 233, 184, .8); transition: all .25s ease; }
+  .eye.l { left: 26px; } .eye.r { right: 26px; }
+  .mouth { position: absolute; left: 50%; bottom: 14px; width: 16px; height: 4px; margin-left: -8px; background: var(--glow);
+           border-radius: 2px; box-shadow: 0 0 6px rgba(255, 233, 184, .7); transition: all .15s ease; transform-origin: center; }
+  .feet { position: absolute; left: 50%; top: 164px; transform: translateX(-50%); width: 88px; height: 14px; }
+  .foot { position: absolute; top: 0; width: 26px; height: 14px; background: var(--body-dark); border-radius: 5px; }
+  .foot.l { left: 6px; } .foot.r { right: 6px; }
+  .caption { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; font: 600 10px/1 -apple-system, sans-serif;
+             color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.8); letter-spacing: .3px; }
+  .badge { position: absolute; right: 8px; top: 26px; min-width: 18px; height: 18px; border-radius: 9px; background: #222;
+           color: var(--glow); font: 700 11px/18px -apple-system, sans-serif; text-align: center; display: none; }
+  .speaker { position: absolute; left: 8px; top: 26px; font-size: 13px; display: none; }
+
+  /* blink */
+  .blink .eye { height: 3px; top: 33px; }
+
+  /* states */
+  .idle .bot { animation: bob 4s ease-in-out infinite; }
+  .sleep .eye { height: 3px; top: 34px; opacity: .5; box-shadow: none; }
+  .sleep .mouth { opacity: .4; }
+  .sleep .light { background: #6b5a4a; box-shadow: none; }
+
+  .thinking .eye { top: 14px; height: 18px; }
+  .thinking .light { animation: pulse 1s ease-in-out infinite; }
+
+  .working .eye { animation: scan 1.2s ease-in-out infinite; }
+  .working .light { animation: pulse .5s ease-in-out infinite; }
+  .working .mouth { width: 10px; margin-left: -5px; }
+
+  .needs_you .light { background: var(--alert); animation: pulse .35s ease-in-out infinite; box-shadow: 0 0 14px 5px rgba(255,179,71,.7); }
+  .needs_you .eye { height: 26px; top: 20px; border-radius: 10px; }
+  .needs_you .ear.r { animation: wave .5s ease-in-out infinite; transform-origin: top center; }
+  .needs_you .bot { animation: hop .7s ease-in-out infinite; }
+
+  .done .eye { height: 10px; top: 28px; border-radius: 10px 10px 2px 2px; }
+  .done .mouth { width: 26px; height: 8px; margin-left: -13px; border-radius: 0 0 13px 13px; }
+  .done .bot { animation: hop .5s ease-out 2; }
+
+  .listening .eye { height: 26px; top: 20px; }
+  .listening .light { background: #8fe3ff; box-shadow: 0 0 14px 5px rgba(143,227,255,.7); }
+  .transcribing .eye { animation: scan .6s linear infinite; }
+  .transcribing .light { background: #8fe3ff; animation: pulse .4s ease-in-out infinite; }
+  .speaking .mouth { animation: talk .18s ease-in-out infinite alternate; }
+
+  .wake .bot { animation: hop .4s ease-out 2; }
+  .wake .eye { height: 26px; top: 20px; }
+  .copied .eye { height: 10px; top: 28px; border-radius: 10px 10px 2px 2px; }
+  .shrug .eye { height: 6px; top: 30px; }
+  .shrug .mouth { transform: rotate(-12deg); }
+  .offline .eye { opacity: .25; } .offline .light { background: #555; box-shadow: none; }
+
+  @keyframes bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 3px); } }
+  @keyframes hop { 0%,100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -8px); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes scan { 0%,100% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
+  @keyframes wave { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-35deg); } }
+  @keyframes talk { from { height: 3px; } to { height: 10px; } }
+</style>
+</head>
+<body class="idle">
+ <div class="stage pywebview-drag-region" id="stage">
+  <div class="bot">
+    <div class="light"></div><div class="antenna"></div>
+    <div class="ear l"></div><div class="ear r"></div>
+    <div class="head"><div class="screen">
+      <div class="eye l"></div><div class="eye r"></div><div class="mouth"></div>
+    </div></div>
+  </div>
+  <div class="feet"><div class="foot l"></div><div class="foot r"></div></div>
+  <div class="badge" id="badge"></div>
+  <div class="speaker" id="speaker">🔊</div>
+  <div class="caption" id="caption"></div>
+ </div>
+ <div class="panel" id="panel">
+  <h1>Settings</h1>
+  <div class="row"><label>Spoken replies</label><label class="switch"><input type="checkbox" data-path="voice.enabled"><span></span></label></div>
+  <div class="row"><label>Speak for</label>
+    <select data-path="voice.scope"><option value="all">all sessions</option><option value="last">last prompted only</option></select></div>
+  <div class="row"><label>Russian voice</label><select data-path="voice.voice_ru" data-voices="ru"></select><button class="play" data-lang="ru">▶</button></div>
+  <div class="row"><label>English voice</label><select data-path="voice.voice_en" data-voices="en"></select><button class="play" data-lang="en">▶</button></div>
+  <div class="hint">"System" = the voice set in Spoken Content (Siri voices live there).</div>
+  <div class="sep"></div>
+  <div class="row"><label>Dictation key</label>
+    <select data-path="hotkeys.push_to_talk"><option value="left_option">hold left ⌥</option><option value="right_option">hold right ⌥</option></select></div>
+  <div class="row"><label>Language</label>
+    <select data-path="stt.language"><option value="ru">Russian (fast)</option><option value="auto">auto-detect</option><option value="en">English</option></select></div>
+  <div class="row"><label>Press Enter after</label><label class="switch"><input type="checkbox" data-path="stt.auto_enter"><span></span></label></div>
+  <div class="sep"></div>
+  <div class="row"><label>New session in</label></div>
+  <div class="row"><input type="text" data-path="general.default_dir" spellcheck="false"></div>
+  <div class="hint">⌃⌥N new session · ⌃⌥V voice on/off · click the robot to close</div>
+ </div>
+<script>
+  const body = document.body, caption = document.getElementById("caption"),
+        badge = document.getElementById("badge"), speaker = document.getElementById("speaker"),
+        mouth = document.querySelector(".mouth");
+  const LABELS = { copied: "copied · ⌘V", thinking: "thinking…", needs_you: "needs you", listening: "listening", transcribing: "…", done: "done" };
+  let state = "idle";
+
+  function render(s) {
+    state = s.state;
+    body.className = s.state;
+    caption.textContent = s.state === "working" ? (s.tool || "working") : (LABELS[s.state] || "");
+    badge.style.display = s.sessions_busy > 1 ? "block" : "none";
+    badge.textContent = s.sessions_busy;
+    speaker.style.display = s.voice_on ? "block" : "none";
+    const vb = document.querySelector('[data-path="voice.enabled"]');
+    if (vb) vb.checked = s.voice_on;
+    if (s.state !== "listening") mouth.style.height = "";
+  }
+
+  function connect() {
+    const ws = new WebSocket(`ws://${location.host}/ws`);
+    ws.onmessage = e => {
+      const m = JSON.parse(e.data);
+      if ("level" in m && !("state" in m)) {
+        if (state === "listening") mouth.style.height = (3 + m.level * 16) + "px";
+        return;
+      }
+      render(m);
+    };
+    ws.onclose = () => { body.className = "offline"; caption.textContent = "offline"; setTimeout(connect, 1500); };
+  }
+  connect();
+
+  // ---- click the robot (without dragging) to open settings ----
+  const stage = document.getElementById("stage"), panel = document.getElementById("panel");
+  const CLOSED = [170, 205], OPEN_W = 300;
+  let down = null;
+  stage.addEventListener("mousedown", e => { down = [e.screenX, e.screenY]; });
+  window.addEventListener("mouseup", e => {
+    if (!down) return;
+    const moved = Math.abs(e.screenX - down[0]) + Math.abs(e.screenY - down[1]);
+    down = null;
+    if (moved < 4 && stage.contains(e.target)) togglePanel();
+  });
+
+  async function togglePanel() {
+    const open = !document.documentElement.classList.contains("open");
+    if (open) await loadSettings();
+    document.documentElement.classList.toggle("open", open);
+    // Size the window to the content: a transparent window still swallows clicks on its empty area.
+    const [w, h] = open ? [OPEN_W, CLOSED[1] + panel.offsetHeight + 12] : CLOSED;
+    const dx = (CLOSED[0] - OPEN_W) / 2 * (open ? 1 : -1);  // keep the robot where it was
+    if (window.pywebview && pywebview.api) await pywebview.api.resize(w, h, dx);
+  }
+
+  const VALUE_OF = { "hotkeys.push_to_talk": v => v[0] };
+  const SAVE_AS = { "hotkeys.push_to_talk": v => [v, "f19"] };
+
+  async function loadSettings() {
+    const { values, voices } = await (await fetch("/settings")).json();
+    for (const sel of panel.querySelectorAll("select[data-voices]")) {
+      const list = [...(voices[sel.dataset.voices] || [])];
+      const current = values[sel.dataset.path];
+      if (current && !list.includes(current)) list.unshift(current);  // keep a configured voice visible
+      sel.innerHTML = '<option value="">System</option>' + list.map(v => `<option>${v}</option>`).join("");
+    }
+    for (const el of panel.querySelectorAll("[data-path]")) {
+      let v = values[el.dataset.path];
+      if (VALUE_OF[el.dataset.path]) v = VALUE_OF[el.dataset.path](v);
+      if (el.type === "checkbox") el.checked = !!v; else el.value = v;
+    }
+  }
+
+  panel.addEventListener("change", e => {
+    const el = e.target, path = el.dataset.path;
+    if (!path) return;
+    let v = el.type === "checkbox" ? el.checked : el.value;
+    if (SAVE_AS[path]) v = SAVE_AS[path](v);
+    fetch("/settings", { method: "POST", body: JSON.stringify({ path, value: v }) });
+  });
+  panel.addEventListener("click", e => {
+    const b = e.target.closest(".play");
+    if (b) fetch("/voice/test", { method: "POST", body: JSON.stringify({ lang: b.dataset.lang }) });
+  });
+
+  // Blink now and then when calm.
+  setInterval(() => {
+    if (state !== "idle" && state !== "done") return;
+    body.classList.add("blink");
+    setTimeout(() => body.classList.remove("blink"), 140);
+  }, 3800);
+</script>
+</body>
+</html>

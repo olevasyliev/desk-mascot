@@ -1,0 +1,27 @@
+# Desk Mascot config. Restart mascotd after editing.
+
+[general]
+port = 7788
+default_dir = "~"                       # where a new Claude session starts
+terminal = "auto"                        # "auto" (Warp if installed), "warp" or "terminal" (Terminal.app)
+
+[hotkeys]
+# Combos use pynput names: <ctrl>, <alt>, <cmd>, <shift>, letters, <f17>...
+new_session = ["<ctrl>+<alt>+n", "<f18>"]
+voice_toggle = ["<ctrl>+<alt>+v", "<f17>"]
+# Hold-to-talk keys. A key that is held alone; any other key pressed meanwhile cancels.
+push_to_talk = ["left_option", "f19"]   # left_option | right_option | any pynput key name
+
+[stt]
+model = "models/ggml-large-v3-turbo-q5_0.bin"
+language = "ru"            # "ru" is ~2x faster than "auto" and keeps English terms inside Russian speech; pure English needs "auto" or "en"
+server_port = 7789
+min_seconds = 0.4
+auto_enter = false         # press Return after pasting
+
+[voice]
+enabled = true             # spoken replies on start; toggle with the voice hotkey
+voice_ru = ""              # "" = system voice from Spoken Content (Siri/neural voices live only there)
+voice_en = "Daniel"        # any name from `say -v ?`, or "" for the system voice
+max_chars = 200
+scope = "all"              # "all" sessions, or "last" = only the session you last prompted
