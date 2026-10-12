@@ -171,6 +171,9 @@ def spoken_summary(text):
     t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t)  # links -> label
     t = re.sub(r"\S*/\S*[^\s.,!?;:]", " ", t)  # paths, urls (keep trailing punctuation)
     t = re.sub(r"[*_#>~]+", " ", t)
+    # `say` reads these aloud: «» as "backslash", emoji by name. Apostrophes inside words (don't) stay.
+    t = re.sub(r"[«»“”„\"()\[\]{}]|(?<!\w)'|'(?!\w)", " ", t)
+    t = re.sub(r"[←-⯿\U0001F000-\U0001FAFF️‍]", " ", t)  # arrows, symbols, emoji
     t = re.sub(r"\s+", " ", t).strip()
     t = re.sub(r"\s+([,.!?;:])", r"\1", t)
     sentences = re.split(r"(?<=[.!?…])\s+", t)
